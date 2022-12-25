@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your models here.
 '''
@@ -12,6 +13,17 @@ class User(models.Model):
         return f'User {self.id} {self.first} {self.last}'
 '''
 
+#model manager
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(PublishedManager,self).get_queryset().filter(status='published')
+
+        @property
+        def all(self):
+            return self.get_queryset()
+
+
+# The post model
 class Post(models.Model):
     STATUS_CHOICES = (
         ('draft','Draft'),
@@ -23,7 +35,7 @@ class Post(models.Model):
     body = models.TextField()
     slug = models.SlugField(max_length = 64, unique_for_date = 'publish')
 
-    published = models.DateTimeField(default = timezone.now)
+    publish = models.DateTimeField(default = timezone.now)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
 
@@ -34,3 +46,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    objects = models.Manager() # default manager
+    published = PublishedManager() #my custom
+
+    def get_absolute_url(self):
+        return reverse ('blog:post_detail', args = [self.slug])
+
