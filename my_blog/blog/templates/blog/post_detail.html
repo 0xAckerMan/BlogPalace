@@ -3,9 +3,19 @@
 {% block title %} - {{post.title}}{% endblock title %}
 
 {% block content %}
+<style>
+    .container {
+    max-width: 768px;
+    width: 100%;
+}
+figure {
+    width: 30px;
+}
+</style>
+
     <article>
-        <figure>
-         <img src="https://via.placeholder.com/1280x720" class="rounded" alt="{{post.title}}">
+        <figure, >
+         <img src="https://via.placeholder.com/800x300" class="rounded" alt="{{post.title}}">
         </figure>
         <div class="mt-3">
             <h1>{{post.title}}</h1>
