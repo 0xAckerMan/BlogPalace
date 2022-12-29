@@ -11,11 +11,16 @@
 figure {
     width: 30px;
 }
-</style>
+img {
+    width: 750px;
+    height: 300px;
+}
 
+</style>
+<!-- 800x300 -->
     <article>
         <figure, >
-         <img src="https://via.placeholder.com/800x300" class="rounded" alt="{{post.title}}">
+         <img src="{{post.image.url}}" class="rounded" alt="{{post.title}}">
         </figure>
         <div class="mt-3">
             <h1>{{post.title}}</h1>
