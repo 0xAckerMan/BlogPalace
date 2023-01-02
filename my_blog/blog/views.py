@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,get_object_or_404
 from .models import *
 from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
+from .forms import CommentForm
 
 # Create your views here.
 def post_list(request):
@@ -23,6 +24,27 @@ def post_list(request):
 
 def post_detail(request, post):
     post =get_object_or_404(Post, slug = post, status = 'published')
+
+    # List of active comments for thispost
+    comments = post.comments.filter(active=True)
+    new_comment = None
+
+    if request.method == 'POST':
+        # A comment was posted
+        comment_form = CommentForm(data=request.POST) 
+        if comment_form.is_valid():
+            # Create Comment object but dont save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            neew_comment.post = post
+            # Save the comment to the database
+            new_comment.save()
+            # redirect to same page and focus on that comment
+            return redirect(post.get_absolute_url()+'#'+str(new_comment.id))
+        else:
+            comment_form = CommentForm()
+
+
     return render(request, 'blog/post_detail.html',{'post':post})
     #return render(request, 'blog/post_detail.html')
 
